@@ -56,7 +56,7 @@ class WordTrie:
         if c not in head:
             head[c] = -1
         else:
-            if head[c] == -1:
+            if head[c] == -1 or -1 in head[c]:
                 print name
                 raise Exception("duplicate name added")
             head[c][-1] = None
