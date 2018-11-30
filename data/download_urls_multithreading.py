@@ -17,6 +17,8 @@ import time
 import itertools
 import socket
 import cv2
+import time
+from datetime import timedelta
 
 socket.setdefaulttimeout(10.0)
 
@@ -77,6 +79,7 @@ class WordTrie:
 def downloadImg(start, end, url_list, save_dir, name_trie, short_limit=448.):
     global record, count, count_invalid, is_exit
     line_num = start - 1
+    begin_time = time.time()
     with open(url_list, 'r')  as url_f:
         for line in itertools.islice(url_f, start, end):
             line_num += 1
@@ -106,9 +109,10 @@ def downloadImg(start, end, url_list, save_dir, name_trie, short_limit=448.):
                 record += 1
                 im_file_Record.write(save_name + "\t" + line)
                 name_trie.add(str(line_num))
-                print('line_num = {}\turl = {} is finished and {} imgs have been downloaded of all {} imgs'.format(line_num, url, record, count))
+                print('{} \t line_num = {}\turl = {} is finished and {} imgs have been downloaded of all {} imgs'
+                      .format(str(timedelta(seconds=time.time() - begin_time)), line_num, url, record, count))
             except:
-                print ("The url:{} is ***INVALID***".format(url))
+                print ("{} \t line_num = {}\tThe url:{} is ***INVALID***".format(str(timedelta(seconds=time.time() - begin_time)), line_num, url))
                 invalid_file.write(save_name + "\t" + line)
                 count_invalid += 1
 
