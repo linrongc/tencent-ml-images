@@ -11,6 +11,7 @@ See the License for the specific language governing permissions and limitations 
 import os
 import sys
 import urllib
+import requests
 import argparse
 import threading, signal
 import time
@@ -93,7 +94,10 @@ def downloadImg(start, end, url_list, save_dir, name_trie, short_limit=448.):
                 continue
             try:
                 save_path = os.path.join(save_dir, save_name)
-                urllib.urlretrieve(url, save_path)
+                request = requests.get(url, timeout=10, stream=True)
+                with open(save_path, 'wb') as f:
+                    for chunk in request.iter_content(1024 * 1024):
+                        f.write(chunk)
                 img = cv2.imread(save_path)
                 if img is None:
                     raise IOError()
